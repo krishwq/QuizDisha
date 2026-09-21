@@ -1,0 +1,7 @@
+{
+  "name": "QuizDisha",
+  "description": "QuizDisha — Learn, Play, Win. Certified Examination & Assessment Engine with Real-Time Anti-Cheat Proctoring and Analytics.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
