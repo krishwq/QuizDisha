@@ -19,11 +19,16 @@ import {
   BookOpen,
   Phone,
   Mail,
-  ArrowUp
+  ArrowUp,
+  Monitor,
+  Laptop,
+  Smartphone
 } from 'lucide-react';
 import { TestMetadata, ExamStandard, ExamSubject } from '../types';
 import { EXAM_CATALOG } from '../data/examCatalog';
 import { QuizDishaLogo } from './QuizDishaLogo';
+import { DesktopOnlyModal } from './DesktopOnlyModal';
+import { isMobileOrTabletDevice, useIsMobileDevice } from '../utils/deviceDetection';
 
 interface LandingPageProps {
   onSelectTest: (test: TestMetadata) => void;
@@ -33,6 +38,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
   const [selectedStandard, setSelectedStandard] = useState<ExamStandard>('Class 10');
   const [selectedSubject, setSelectedSubject] = useState<ExamSubject | 'All'>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isDesktopWarningOpen, setIsDesktopWarningOpen] = useState<boolean>(false);
+  const [selectedTestForWarning, setSelectedTestForWarning] = useState<TestMetadata | null>(null);
+  const isMobile = useIsMobileDevice();
+
+  const handleAttemptTest = (test: TestMetadata) => {
+    if (isMobileOrTabletDevice()) {
+      setSelectedTestForWarning(test);
+      setIsDesktopWarningOpen(true);
+    } else {
+      onSelectTest(test);
+    }
+  };
 
   // Filter tests by Standard, Subject, and Search
   const filteredTests = useMemo(() => {
@@ -201,6 +218,28 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
             </div>
           </div>
 
+          {/* Device Compatibility Notice Banner */}
+          <div className="pt-2 max-w-3xl mx-auto">
+            <div className="p-4 rounded-2xl bg-white border border-[#E7E5E4] shadow-xs flex items-start gap-3.5 text-left">
+              <div className="w-10 h-10 rounded-xl bg-[#EEF2FF] text-[#4338CA] border border-[#EEF2FF] flex items-center justify-center shrink-0">
+                <Monitor className="w-5 h-5" />
+              </div>
+              <div className="space-y-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-bold text-[#1C1917]">
+                    Device Policy: Web Page on Any Device • Test Window on Desktop Only
+                  </span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#16A34A] border border-[#A7F3D0]">
+                    Mobile Browsing Allowed
+                  </span>
+                </div>
+                <p className="text-xs text-[#78716C] leading-relaxed">
+                  You can explore syllabus topics, view sample questions, and review past test transcripts on <strong>any mobile phone, tablet, or desktop</strong>. However, the <strong>live examination window strictly requires a desktop or laptop computer</strong> to support full-screen lockdown, continuous webcam proctoring, and microphone monitoring.
+                </p>
+              </div>
+            </div>
+          </div>
+
           {/* Primary Action Button */}
           <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
             <button
@@ -237,6 +276,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
             Choose your standard (Class 10 or Class 9), select a subject or set, and click 
             <strong> &ldquo;Take Test&rdquo;</strong> to start the secure assessment.
           </p>
+        </div>
+
+        {/* Device Policy Notice for Give Exam */}
+        <div className="max-w-3xl mx-auto p-3.5 sm:p-4 rounded-2xl bg-[#FFF7ED] border border-[#FED7AA] flex items-start gap-3 text-xs text-[#9A3412]">
+          <Laptop className="w-5 h-5 text-[#EA580C] shrink-0 mt-0.5" />
+          <div className="space-y-0.5">
+            <p className="font-bold text-[#C2410C]">
+              Important Examination Notice: Desktop / Laptop Required
+            </p>
+            <p className="text-[#9A3412] leading-relaxed">
+              The web portal opens on all devices. However, the certified test window strictly opens on desktop or laptop computers. Mobile visitors will see a prompt to copy the link and open the exam on PC.
+            </p>
+          </div>
         </div>
 
         {/* Standard Selector Tabs (Class 10 vs Class 9) */}
@@ -351,9 +403,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
                       </span>
                     </div>
 
-                    <span className="text-xs font-semibold text-[#78716C]">
-                      {test.standard}
-                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#ECFEFF] text-[#0891B2] border border-[#0891B2]/20">
+                        <Monitor className="w-3 h-3" />
+                        Desktop Exam
+                      </span>
+                      <span className="text-xs font-semibold text-[#78716C]">
+                        {test.standard}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Test Title & Subtitle */}
@@ -408,7 +466,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
                 <div className="pt-6">
                   <button
                     id={`start-test-btn-${test.id}`}
-                    onClick={() => onSelectTest(test)}
+                    onClick={() => handleAttemptTest(test)}
                     className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold bg-[#1C1917] hover:bg-[#4338CA] text-white transition-all shadow-xs group cursor-pointer"
                   >
                     <span>Give Exam: {test.subject} (Set {test.setNumber})</span>
@@ -548,6 +606,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
             </div>
             <p className="text-xs text-[#78716C]">
               Exiting fullscreen or switching tabs triggers warnings. 3 strikes results in immediate disqualification.
+            </p>
+          </div>
+
+          {/* Device & Hardware Policy Card */}
+          <div className="p-5 rounded-2xl bg-white border border-[#E7E5E4] shadow-xs space-y-2 sm:col-span-2 lg:col-span-4 bg-gradient-to-r from-white via-[#FAFAF9] to-[#EEF2FF]/40">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#4338CA]">
+              <Monitor className="w-4 h-4" />
+              <span>Device &amp; Hardware Policy</span>
+            </div>
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="text-lg sm:text-xl font-black text-[#1C1917]">Desktop / Laptop Required</span>
+              <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#ECFDF5] text-[#16A34A] border border-[#A7F3D0]">
+                Web Portal Accessible on Any Device
+              </span>
+            </div>
+            <p className="text-xs text-[#78716C] leading-relaxed">
+              While you can browse papers and read syllabi on any smartphone or tablet, the certified examination window strictly requires a desktop or laptop computer to enable full-screen security monitoring, continuous webcam surveillance, and microphone noise auditing.
             </p>
           </div>
 
@@ -793,6 +868,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onSelectTest }) => {
 
         </div>
       </footer>
+
+      {/* Mobile Device Restriction Modal */}
+      <DesktopOnlyModal
+        isOpen={isDesktopWarningOpen}
+        onClose={() => {
+          setIsDesktopWarningOpen(false);
+          setSelectedTestForWarning(null);
+        }}
+        selectedTest={selectedTestForWarning}
+        onPreviewInstructions={() => {
+          if (selectedTestForWarning) {
+            onSelectTest(selectedTestForWarning);
+          }
+        }}
+      />
 
     </div>
   );

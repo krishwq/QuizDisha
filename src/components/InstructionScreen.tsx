@@ -16,10 +16,14 @@ import {
   CameraOff,
   User,
   Mail,
-  ArrowLeft
+  ArrowLeft,
+  Monitor,
+  Smartphone
 } from 'lucide-react';
 import { Question, CandidateInfo, TestMetadata } from '../types';
 import { QuizDishaLogo } from './QuizDishaLogo';
+import { DesktopOnlyModal } from './DesktopOnlyModal';
+import { isMobileOrTabletDevice, useIsMobileDevice } from '../utils/deviceDetection';
 
 interface InstructionScreenProps {
   questions: Question[];
@@ -47,10 +51,20 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
   const [hasAgreedTerms, setHasAgreedTerms] = useState(false);
   const [isVerifyingHardware, setIsVerifyingHardware] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [isDesktopWarningOpen, setIsDesktopWarningOpen] = useState(false);
+  const isMobile = useIsMobileDevice();
   const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const totalMinutes = questions.length * 2;
+
+  const handleStartExamAttempt = () => {
+    if (isMobileOrTabletDevice()) {
+      setIsDesktopWarningOpen(true);
+      return;
+    }
+    onStartExam();
+  };
 
   // Bind video element to media stream
   useEffect(() => {
@@ -123,6 +137,38 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
               <ArrowLeft className="w-4 h-4 text-[#4338CA]" />
               <span>Back to Examination Directory / Change Test</span>
             </button>
+          </div>
+        )}
+
+        {/* Mobile Device Detected Warning Banner */}
+        {isMobile && (
+          <div className="bg-[#FFF7ED] border-2 border-[#F97316] rounded-2xl p-4 sm:p-5 shadow-sm space-y-3">
+            <div className="flex items-start gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#F97316]/15 text-[#EA580C] flex items-center justify-center shrink-0">
+                <Monitor className="w-5 h-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#EA580C] text-white text-[10px] font-extrabold uppercase tracking-wider">
+                    Mobile Device Detected
+                  </span>
+                  <h4 className="text-sm font-extrabold text-[#9A3412]">
+                    Test Window Opens on Desktop / Laptop Only
+                  </h4>
+                </div>
+                <p className="text-xs text-[#9A3412] leading-relaxed">
+                  You are reviewing these guidelines from a smartphone or tablet. While you may preview all assessment instructions and syllabus guidelines here, the <strong>live proctored test window will not start on a mobile device</strong>. Please open this link on a desktop computer with a camera and microphone to take the test.
+                </p>
+                <div className="pt-1">
+                  <button
+                    onClick={() => setIsDesktopWarningOpen(true)}
+                    className="text-xs font-bold text-[#EA580C] underline hover:text-[#C2410C] cursor-pointer inline-flex items-center gap-1"
+                  >
+                    <span>View Desktop Requirements &amp; Copy Link</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -499,7 +545,7 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
 
                 <button
                   id="start-quiz-btn"
-                  onClick={onStartExam}
+                  onClick={handleStartExamAttempt}
                   disabled={!isReadyToStart}
                   className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 ${
                     isReadyToStart
@@ -511,6 +557,12 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
                   Start Proctored Assessment
                 </button>
               </div>
+
+              {isMobile && (
+                <p className="text-xs text-[#EA580C] text-center sm:text-right font-bold">
+                  * Desktop Required: The live examination window cannot be started from a mobile or tablet device.
+                </p>
+              )}
 
               {(!stream || !isNameValid || !isEmailValid || !hasAgreedTerms) && (
                 <p className="text-xs text-[#E11D48] text-center sm:text-right font-medium">
@@ -528,6 +580,13 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
         </div>
 
       </div>
+
+      {/* Desktop Only Warning Modal */}
+      <DesktopOnlyModal
+        isOpen={isDesktopWarningOpen}
+        onClose={() => setIsDesktopWarningOpen(false)}
+        selectedTest={testMetadata}
+      />
     </div>
   );
 };

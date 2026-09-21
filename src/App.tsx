@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Monitor } from 'lucide-react';
 import { SAMPLE_QUESTIONS } from './data/sampleQuestions';
 import { Question, UserAnswerValue, QuizReportData, ProctorViolation, CandidateInfo, TestMetadata } from './types';
 import { evaluateQuiz } from './utils/scoring';
@@ -7,6 +7,7 @@ import { generateQuizPdfReport } from './utils/generatePdfReport';
 import { uploadToGoogleDriveViaGas } from './utils/gasDriveSync';
 import { useProctoring } from './hooks/useProctoring';
 import { EXAM_CATALOG } from './data/examCatalog';
+import { isMobileOrTabletDevice } from './utils/deviceDetection';
 
 // Components
 import { LandingPage } from './components/LandingPage';
@@ -18,10 +19,12 @@ import { LiveProctorWidget } from './components/LiveProctorWidget';
 import { WarningModal } from './components/WarningModal';
 import { ConfirmSubmitModal } from './components/ConfirmSubmitModal';
 import { ReportScreen } from './components/ReportScreen';
+import { DesktopOnlyModal } from './components/DesktopOnlyModal';
 
 export default function App() {
   const [phase, setPhase] = useState<'landing' | 'instructions' | 'active' | 'report'>('landing');
   const [selectedTest, setSelectedTest] = useState<TestMetadata | null>(null);
+  const [isDesktopModalOpen, setIsDesktopModalOpen] = useState(false);
   const [candidate, setCandidate] = useState<CandidateInfo>({
     name: '',
     email: '',
@@ -99,6 +102,12 @@ export default function App() {
 
   // Start Exam Flow
   const handleStartExam = async () => {
+    // 0. Strict Desktop Requirement Check
+    if (isMobileOrTabletDevice()) {
+      setIsDesktopModalOpen(true);
+      return;
+    }
+
     // 1. Verify Camera & Mic Stream
     let activeStream = stream;
     if (!activeStream) {
@@ -332,8 +341,30 @@ export default function App() {
         />
       )}
 
-      {/* 2. Active Proctored Quiz Screen */}
-      {phase === 'active' && currentQuestion && (
+      {/* 2. Active Proctored Quiz Screen (Desktop Only Guard) */}
+      {phase === 'active' && isMobileOrTabletDevice() && (
+        <div className="min-h-screen bg-[#FAFAF9] flex items-center justify-center p-6 text-center">
+          <div className="bg-white border border-[#E7E5E4] rounded-2xl p-8 max-w-md w-full shadow-lg space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center mx-auto">
+              <Monitor className="w-6 h-6" />
+            </div>
+            <h2 className="text-xl font-extrabold text-[#1C1917]">Desktop Required for Test Window</h2>
+            <p className="text-xs text-[#78716C] leading-relaxed">
+              The live assessment window cannot run on a mobile or tablet device. Please open this assessment on a desktop computer or laptop to proceed.
+            </p>
+            <div className="pt-2">
+              <button
+                onClick={() => setPhase('landing')}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold transition-colors cursor-pointer"
+              >
+                Return to Test Directory
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {phase === 'active' && !isMobileOrTabletDevice() && currentQuestion && (
         <div className="flex-1 flex flex-col">
           
           {/* Floating Sticky Countdown Header */}
@@ -423,6 +454,13 @@ export default function App() {
           report={reportData}
         />
       )}
+
+      {/* Desktop Only Restriction Modal */}
+      <DesktopOnlyModal
+        isOpen={isDesktopModalOpen}
+        onClose={() => setIsDesktopModalOpen(false)}
+        selectedTest={selectedTest}
+      />
 
     </div>
   );
