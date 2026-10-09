@@ -17,7 +17,10 @@ import {
   Dot,
   Send,
   Maximize2,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Atom,
+  BookOpen,
+  ArrowRight
 } from 'lucide-react';
 import { parseOption } from '../utils/questionUtils';
 import { ImageViewerModal } from './ImageViewerModal';
@@ -33,6 +36,9 @@ interface QuestionCardProps {
   onClearResponse: () => void;
   onPrev: () => void;
   onNext: () => void;
+  isFirst?: boolean;
+  isLastOfSubjectSection?: boolean;
+  onCompleteSubjectSection?: () => void;
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -46,6 +52,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   onClearResponse,
   onPrev,
   onNext,
+  isFirst: customIsFirst,
+  isLastOfSubjectSection = false,
+  onCompleteSubjectSection,
 }) => {
   // Modal state for inspecting diagram in high resolution
   const [modalImage, setModalImage] = useState<{
@@ -104,7 +113,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     }
   };
 
-  const isFirst = currentIndex === 0;
+  const isFirst = customIsFirst !== undefined ? customIsFirst : currentIndex === 0;
   const isLast = currentIndex === totalQuestions - 1;
 
   // Render question marking badge
@@ -145,17 +154,39 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   return (
     <article 
       id={`question-card-${question.id}`}
-      className="bg-white border border-[#E7E5E4] rounded-2xl shadow-sm p-5 sm:p-7 flex flex-col justify-between min-h-[500px]"
+      className="bg-white border border-[#d6e4f0] rounded-2xl shadow-sm p-5 sm:p-7 flex flex-col justify-between min-h-[500px]"
     >
       {/* Top Question Info Bar */}
       <div className="space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E7E5E4] pb-3.5">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-xl text-sm font-bold bg-[#FAFAF9] text-[#1C1917] border border-[#E7E5E4]">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#d6e4f0] pb-3.5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-3 py-1 rounded-xl text-sm font-bold bg-[#f8fbfe] text-[#00072d] border border-[#d6e4f0]">
               Q{currentIndex + 1}
             </span>
-            <span className="text-xs text-[#78716C]">of {totalQuestions}</span>
-            <span className="text-xs font-medium text-[#4338CA] bg-[#EEF2FF] px-2.5 py-0.5 rounded-md border border-[#4338CA]/20">
+            <span className="text-xs text-[#536b82]">of {totalQuestions}</span>
+
+            {/* Subject Badge if specified */}
+            {question.subject && (
+              <span className={`inline-flex items-center gap-1 text-xs font-bold px-2.5 py-0.5 rounded-lg border ${
+                question.subject === 'Physics'
+                  ? 'bg-[#a6e1fa]/30 text-[#0e6ba8] border-[#0e6ba8]/30'
+                  : 'bg-[#a6e1fa]/30 text-[#0a2472] border-[#0a2472]/30'
+              }`}>
+                {question.subject === 'Physics' ? (
+                  <Atom className="w-3.5 h-3.5" />
+                ) : (
+                  <BookOpen className="w-3.5 h-3.5" />
+                )}
+                <span>{question.subject}</span>
+              </span>
+            )}
+
+            {/* Section Badge (MCQ vs Numerical) */}
+            <span className="text-xs font-semibold px-2.5 py-0.5 rounded-lg bg-[#f8fbfe] text-[#00072d] border border-[#d6e4f0]">
+              {question.type === 'numerical' ? 'Section B: Numerical' : 'Section A: MCQ'}
+            </span>
+
+            <span className="text-xs font-medium text-[#0a2472] bg-[#a6e1fa]/25 px-2.5 py-0.5 rounded-md border border-[#a6e1fa]/40">
               {question.category}
             </span>
           </div>
@@ -172,14 +203,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
         {/* Question Statement */}
         <div className="space-y-3">
-          <h2 className="text-base sm:text-lg font-semibold text-[#1C1917] leading-relaxed">
+          <h2 className="text-base sm:text-lg font-semibold text-[#00072d] leading-relaxed">
             {question.prompt}
           </h2>
 
           {/* External Question Diagram / Illustration */}
           {question.imageUrl && (
-            <div className="my-3 p-3.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl flex flex-col items-center justify-center relative group">
-              <div className="relative max-h-72 sm:max-h-84 w-full flex items-center justify-center overflow-hidden rounded-lg bg-white border border-[#E7E5E4] p-2">
+            <div className="my-3 p-3.5 bg-[#f8fbfe] border border-[#d6e4f0] rounded-xl flex flex-col items-center justify-center relative group">
+              <div className="relative max-h-72 sm:max-h-84 w-full flex items-center justify-center overflow-hidden rounded-lg bg-white border border-[#d6e4f0] p-2">
                 <img
                   src={question.imageUrl}
                   alt={question.imageCaption || `Question ${currentIndex + 1} Diagram`}
@@ -188,15 +219,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                   onClick={() => openImageModal(question.imageUrl!, `Question ${currentIndex + 1} Diagram`, question.imageCaption)}
                 />
               </div>
-              <div className="w-full flex items-center justify-between pt-2.5 border-t border-[#E7E5E4] mt-2 text-xs text-[#78716C]">
+              <div className="w-full flex items-center justify-between pt-2.5 border-t border-[#d6e4f0] mt-2 text-xs text-[#536b82]">
                 <div className="flex items-center gap-1.5 font-medium">
-                  <ImageIcon className="w-3.5 h-3.5 text-[#4338CA]" />
+                  <ImageIcon className="w-3.5 h-3.5 text-[#0a2472]" />
                   <span>{question.imageCaption || `Figure ${currentIndex + 1}: Question Diagram`}</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => openImageModal(question.imageUrl!, `Question ${currentIndex + 1} Diagram`, question.imageCaption)}
-                  className="inline-flex items-center gap-1 text-[#4338CA] hover:text-[#3730A3] font-semibold text-xs transition-colors cursor-pointer bg-white px-2.5 py-1 rounded-md border border-[#E7E5E4] shadow-2xs"
+                  className="inline-flex items-center gap-1 text-[#0a2472] hover:text-[#001c55] font-semibold text-xs transition-colors cursor-pointer bg-white px-2.5 py-1 rounded-md border border-[#d6e4f0] shadow-2xs"
                 >
                   <Maximize2 className="w-3.5 h-3.5" />
                   <span>Enlarge Diagram</span>
@@ -206,12 +237,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           )}
 
           {question.type === 'multiple' && (
-            <p className="text-xs text-[#4338CA] font-medium">
+            <p className="text-xs text-[#0a2472] font-medium">
               * Multiple choices apply: Select every correct choice (+4 for full match, -2 for incorrect/partial).
             </p>
           )}
           {question.type === 'numerical' && (
-            <p className="text-xs text-[#0891B2] font-medium">
+            <p className="text-xs text-[#0e6ba8] font-medium">
               * Enter numeric answer: System verifies within configured tolerance window (0 negative marks).
             </p>
           )}
@@ -235,15 +266,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     onClick={() => handleSingleSelect(optIdx)}
                     className={`w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3.5 cursor-pointer ${
                       isSelected
-                        ? 'bg-[#ECFEFF] border-[#0891B2] text-[#1C1917] shadow-xs ring-1 ring-[#0891B2]'
-                        : 'bg-white border-[#E7E5E4] text-[#1C1917] hover:bg-[#FAFAF9] hover:border-[#78716C]'
+                        ? 'bg-[#a6e1fa]/25 border-2 border-[#0a2472] text-[#00072d] shadow-xs'
+                        : 'bg-white border-[#d6e4f0] text-[#00072d] hover:bg-[#f8fbfe] hover:border-[#0e6ba8]'
                     }`}
                   >
                     <span 
                       className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 border ${
                         isSelected
-                          ? 'bg-[#0891B2] text-white border-[#0891B2]'
-                          : 'bg-[#FAFAF9] text-[#78716C] border-[#E7E5E4]'
+                          ? 'bg-[#0a2472] text-white border-[#0a2472]'
+                          : 'bg-[#f8fbfe] text-[#536b82] border-[#d6e4f0]'
                       }`}
                     >
                       {optionLabel}
@@ -299,15 +330,15 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     onClick={() => handleMultipleToggle(optIdx)}
                     className={`w-full text-left p-4 rounded-xl border transition-all flex items-start gap-3.5 cursor-pointer ${
                       isSelected
-                        ? 'bg-[#EEF2FF] border-[#4338CA] text-[#1C1917] shadow-xs ring-1 ring-[#4338CA]'
-                        : 'bg-white border-[#E7E5E4] text-[#1C1917] hover:bg-[#FAFAF9] hover:border-[#78716C]'
+                        ? 'bg-[#a6e1fa]/25 border-2 border-[#0a2472] text-[#00072d] shadow-xs ring-1 ring-[#0a2472]'
+                        : 'bg-white border-[#d6e4f0] text-[#00072d] hover:bg-[#f8fbfe] hover:border-[#0e6ba8]'
                     }`}
                   >
                     <div 
                       className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 border ${
                         isSelected
-                          ? 'bg-[#4338CA] text-white border-[#4338CA]'
-                          : 'bg-[#FAFAF9] text-[#78716C] border-[#E7E5E4]'
+                          ? 'bg-[#0a2472] text-white border-[#0a2472]'
+                          : 'bg-[#f8fbfe] text-[#536b82] border-[#d6e4f0]'
                       }`}
                     >
                       {isSelected ? '✓' : optionLabel}
@@ -325,7 +356,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                             src={parsed.imageUrl}
                             alt={`Option ${optionLabel}`}
                             referrerPolicy="no-referrer"
-                            className="max-h-40 sm:max-h-48 max-w-full object-contain rounded-lg border border-[#E7E5E4] bg-white p-1.5"
+                            className="max-h-40 sm:max-h-48 max-w-full object-contain rounded-lg border border-[#d6e4f0] bg-white p-1.5"
                           />
                           <button
                             type="button"
@@ -349,10 +380,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
           {/* 3. Numerical Value Input */}
           {question.type === 'numerical' && (
-            <div className="bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl p-5 space-y-4">
+            <div className="bg-[#f8fbfe] border border-[#d6e4f0] rounded-xl p-5 space-y-4">
               <label 
                 htmlFor={`numerical-input-${question.id}`}
-                className="block text-xs font-semibold uppercase tracking-wider text-[#78716C]"
+                className="block text-xs font-semibold uppercase tracking-wider text-[#536b82]"
               >
                 Enter Numerical Answer
               </label>
@@ -370,10 +401,10 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                     }
                     onChange={handleNumericalChange}
                     placeholder={(question as NumericalQuestion).placeholder || 'e.g. 10.5'}
-                    className="w-full bg-white border-2 border-[#E7E5E4] focus:border-[#4338CA] rounded-xl px-4 py-3.5 text-lg font-mono text-[#1C1917] placeholder-[#78716C] outline-none transition-all shadow-xs"
+                    className="w-full bg-white border-2 border-[#d6e4f0] focus:border-[#0a2472] rounded-xl px-4 py-3.5 text-lg font-mono text-[#00072d] placeholder-[#536b82] outline-none transition-all shadow-xs"
                   />
                   {(question as NumericalQuestion).unit && (
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-[#1C1917] bg-[#FAFAF9] px-2.5 py-1 rounded-lg border border-[#E7E5E4]">
+                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-medium text-[#00072d] bg-[#f8fbfe] px-2.5 py-1 rounded-lg border border-[#d6e4f0]">
                       {(question as NumericalQuestion).unit}
                     </span>
                   )}
@@ -382,13 +413,13 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
                 {currentAnswer !== null && (
                   <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#ECFDF5] border border-[#A7F3D0] text-xs font-semibold text-[#16A34A]">
                     <span>Recorded:</span>
-                    <span className="font-mono text-[#1C1917] font-bold">{String(currentAnswer)}</span>
+                    <span className="font-mono text-[#00072d] font-bold">{String(currentAnswer)}</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex items-center gap-2 text-xs text-[#78716C] bg-white p-3 rounded-xl border border-[#E7E5E4]">
-                <HelpCircle className="w-4 h-4 text-[#0891B2] shrink-0" />
+              <div className="flex items-center gap-2 text-xs text-[#536b82] bg-white p-3 rounded-xl border border-[#d6e4f0]">
+                <HelpCircle className="w-4 h-4 text-[#0e6ba8] shrink-0" />
                 <span>
                   Tolerance margin is applied automatically during evaluation. Round to 2 decimal places where applicable.
                 </span>
@@ -400,7 +431,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       </div>
 
       {/* Bottom Action Controls */}
-      <div className="pt-6 border-t border-[#E7E5E4] mt-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="pt-6 border-t border-[#d6e4f0] mt-6 flex flex-wrap items-center justify-between gap-3">
         
         {/* Left Actions: Clear & Mark Review */}
         <div className="flex items-center gap-2.5">
@@ -410,8 +441,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             disabled={currentAnswer === null}
             className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border ${
               currentAnswer !== null
-                ? 'bg-white hover:bg-[#FFF1F2] text-[#78716C] hover:text-[#E11D48] border-[#E7E5E4] hover:border-[#FECDD3] cursor-pointer'
-                : 'bg-[#FAFAF9] text-[#E7E5E4] border-[#E7E5E4] cursor-not-allowed'
+                ? 'bg-white hover:bg-[#FFF1F2] text-[#536b82] hover:text-[#E11D48] border-[#d6e4f0] hover:border-[#FECDD3] cursor-pointer'
+                : 'bg-[#f8fbfe] text-[#d6e4f0] border-[#d6e4f0] cursor-not-allowed'
             }`}
           >
             <RotateCcw className="w-3.5 h-3.5" />
@@ -440,27 +471,39 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             disabled={isFirst}
             className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold transition-all border ${
               !isFirst
-                ? 'bg-white hover:bg-[#FAFAF9] text-[#1C1917] border-[#E7E5E4] cursor-pointer'
-                : 'bg-[#FAFAF9] text-[#E7E5E4] border-[#E7E5E4] cursor-not-allowed'
+                ? 'bg-white hover:bg-[#f8fbfe] text-[#00072d] border-[#d6e4f0] cursor-pointer'
+                : 'bg-[#f8fbfe] text-[#d6e4f0] border-[#d6e4f0] cursor-not-allowed'
             }`}
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Previous</span>
           </button>
 
-          <button
-            id="next-question-btn"
-            type="button"
-            onClick={onNext}
-            className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
-              isLast
-                ? 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-emerald-600/20'
-                : 'bg-[#4338CA] hover:bg-[#3730A3] text-white shadow-indigo-500/20'
-            }`}
-          >
-            <span>{isLast ? 'Finish & Final Submit' : 'Save & Next'}</span>
-            {isLast ? <Send className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          </button>
+          {isLastOfSubjectSection ? (
+            <button
+              id="complete-subject-btn"
+              type="button"
+              onClick={onCompleteSubjectSection || onNext}
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md bg-[#0e6ba8] hover:bg-[#0a2472] text-white shadow-[#0e6ba8]/20"
+            >
+              <span>Complete {question.subject || 'Section'} &amp; Selection Page</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              id="next-question-btn"
+              type="button"
+              onClick={onNext}
+              className={`inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
+                isLast
+                  ? 'bg-[#16A34A] hover:bg-[#15803D] text-white shadow-emerald-600/20'
+                  : 'bg-[#0a2472] hover:bg-[#001c55] text-white shadow-[#0a2472]/20'
+              }`}
+            >
+              <span>{isLast ? 'Finish & Final Submit' : 'Save & Next'}</span>
+              {isLast ? <Send className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            </button>
+          )}
         </div>
 
       </div>

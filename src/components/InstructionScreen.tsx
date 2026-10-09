@@ -56,7 +56,7 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
   const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  const totalMinutes = questions.length * 2;
+  const totalMinutes = questions.length * 3;
 
   const handleStartExamAttempt = () => {
     if (isMobileOrTabletDevice()) {
@@ -173,50 +173,53 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
         )}
 
         {/* Top Header */}
-        <header className="bg-white border border-[#E7E5E4] rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <header className="bg-white border border-[#d6e4f0] rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-3">
             <QuizDishaLogo size="sm" showTagline={true} />
             <div className="flex flex-wrap items-center gap-2">
               {testMetadata ? (
                 <>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#EEF2FF] text-[#4338CA] border border-[#EEF2FF]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#4338CA]" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-[#a6e1fa]/30 text-[#0a2472] border border-[#a6e1fa]/40">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#0a2472]" />
                     {testMetadata.standard} • {testMetadata.subject}
                   </span>
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#FAFAF9] text-[#1C1917] border border-[#E7E5E4]">
-                    Set {testMetadata.setNumber}
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[#f8fbfe] text-[#0a2472] border border-[#d6e4f0]">
+                    {testMetadata.subject === 'Combined' ? 'Physics + Math' : 'MCQ & Numerical'}
                   </span>
                 </>
               ) : (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#EEF2FF] text-[#4338CA] border border-[#EEF2FF]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#4338CA]" />
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#a6e1fa]/30 text-[#0a2472] border border-[#a6e1fa]/40">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#0a2472]" />
                   Proctor Intelligence Engine
                 </span>
               )}
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#FAFAF9] text-[#78716C] border border-[#E7E5E4]">
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[#f8fbfe] text-[#536b82] border border-[#d6e4f0]">
                 Verified Assessment
               </span>
             </div>
             
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#1C1917]">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#00072d]">
               {testMetadata ? testMetadata.title : 'Candidate Examination Portal'}
             </h1>
-            <p className="text-sm text-[#4338CA] font-semibold">
+            <p className="text-sm text-[#0a2472] font-semibold">
               {testMetadata ? testMetadata.subtitle : 'High-Integrity Proctoring with Audio/Visual Surveillance & Anti-Cheat Protection'}
             </p>
             {testMetadata && (
-              <p className="text-xs text-[#78716C] pt-0.5">
+              <p className="text-xs text-[#536b82] pt-0.5">
                 {testMetadata.description}
               </p>
             )}
           </div>
 
-          <div className="flex items-center gap-3 bg-[#FAFAF9] border border-[#E7E5E4] px-4 py-2.5 rounded-xl shrink-0">
-            <Clock className="w-5 h-5 text-[#0891B2]" />
+          <div className="flex items-center gap-3 bg-[#f8fbfe] border border-[#d6e4f0] px-4 py-2.5 rounded-xl shrink-0">
+            <Clock className="w-5 h-5 text-[#0e6ba8]" />
             <div>
-              <div className="text-xs text-[#78716C]">Allocated Exam Time</div>
-              <div className="text-sm font-bold text-[#1C1917]">
+              <div className="text-xs text-[#536b82]">Allocated Exam Time</div>
+              <div className="text-sm font-bold text-[#00072d]">
                 {testMetadata ? `${testMetadata.durationMinutes} Minutes` : `${totalMinutes} Minutes`} ({questions.length} Questions)
+              </div>
+              <div className="text-sm font-bold text-[#00072d92]">
+                (3 Minutes/Question)
               </div>
             </div>
           </div>
@@ -470,29 +473,29 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
             </section>
 
             {/* Candidate Registration Form Card */}
-            <section id="candidate-registration-card" className="bg-white border border-[#E7E5E4] rounded-2xl p-5 shadow-sm space-y-4">
-              <div className="flex items-center gap-2 border-b border-[#E7E5E4] pb-3">
-                <User className="w-5 h-5 text-[#4338CA]" />
+            <section id="candidate-registration-card" className="bg-white border border-[#d6e4f0] rounded-2xl p-5 shadow-sm space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#d6e4f0] pb-3">
+                <User className="w-5 h-5 text-[#0a2472]" />
                 <div>
-                  <h2 className="font-semibold text-[#1C1917] text-base">Candidate Information</h2>
-                  <p className="text-xs text-[#78716C]">Enter credentials to generate your official PDF assessment transcript.</p>
+                  <h2 className="font-semibold text-[#00072d] text-base">Candidate Information</h2>
+                  <p className="text-xs text-[#536b82]">Enter credentials to generate your official PDF assessment transcript.</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label htmlFor="candidate-name-input" className="block text-xs font-semibold text-[#1C1917]">
+                  <label htmlFor="candidate-name-input" className="block text-xs font-semibold text-[#00072d]">
                     Candidate Full Name <span className="text-[#E11D48]">*</span>
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#78716C]" />
+                    <User className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#536b82]" />
                     <input
                       id="candidate-name-input"
                       type="text"
                       value={candidate.name}
                       onChange={(e) => onCandidateChange({ ...candidate, name: e.target.value })}
-                      placeholder="e.g. Alex Morgan"
-                      className="w-full bg-[#FAFAF9] border border-[#E7E5E4] focus:border-[#4338CA] focus:bg-white rounded-xl pl-9 pr-3 py-2.5 text-xs text-[#1C1917] placeholder-[#78716C] focus:outline-none transition-colors"
+                      placeholder="Write your name"
+                      className="w-full bg-[#f8fbfe] border border-[#d6e4f0] focus:border-[#0a2472] focus:bg-white rounded-xl pl-9 pr-3 py-2.5 text-xs text-[#00072d] placeholder-[#536b82] focus:outline-none transition-colors"
                     />
                   </div>
                   {!isNameValid && candidate.name.length > 0 && (
@@ -501,18 +504,18 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="candidate-email-input" className="block text-xs font-semibold text-[#1C1917]">
+                  <label htmlFor="candidate-email-input" className="block text-xs font-semibold text-[#00072d]">
                     Official Email ID <span className="text-[#E11D48]">*</span>
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#78716C]" />
+                    <Mail className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#536b82]" />
                     <input
                       id="candidate-email-input"
                       type="email"
                       value={candidate.email}
                       onChange={(e) => onCandidateChange({ ...candidate, email: e.target.value })}
-                      placeholder="e.g. alex@university.edu"
-                      className="w-full bg-[#FAFAF9] border border-[#E7E5E4] focus:border-[#4338CA] focus:bg-white rounded-xl pl-9 pr-3 py-2.5 text-xs text-[#1C1917] placeholder-[#78716C] focus:outline-none transition-colors"
+                      placeholder="e.g. email@gmail.com"
+                      className="w-full bg-[#f8fbfe] border border-[#d6e4f0] focus:border-[#0a2472] focus:bg-white rounded-xl pl-9 pr-3 py-2.5 text-xs text-[#00072d] placeholder-[#536b82] focus:outline-none transition-colors"
                     />
                   </div>
                   {!isEmailValid && candidate.email.length > 0 && (
@@ -523,23 +526,23 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
             </section>
 
             {/* Candidate Declaration & Start Button */}
-            <div className="bg-white border border-[#E7E5E4] rounded-2xl p-5 shadow-sm space-y-4">
+            <div className="bg-white border border-[#d6e4f0] rounded-2xl p-5 shadow-sm space-y-4">
               <label className="flex items-start gap-3 cursor-pointer select-none">
                 <input
                   id="agree-proctor-terms-checkbox"
                   type="checkbox"
                   checked={hasAgreedTerms}
                   onChange={(e) => setHasAgreedTerms(e.target.checked)}
-                  className="mt-1 w-4 h-4 rounded text-[#4338CA] bg-white border-[#E7E5E4] focus:ring-[#4338CA] cursor-pointer"
+                  className="mt-1 w-4 h-4 rounded text-[#0a2472] bg-white border-[#d6e4f0] focus:ring-[#0a2472] cursor-pointer"
                 />
-                <span className="text-xs text-[#1C1917] leading-relaxed">
+                <span className="text-xs text-[#00072d] leading-relaxed">
                   I agree to enter Full-Screen mode, permit continuous surveillance recording, and understand that violations will invoke the 3-strikes disqualification protocol.
                 </span>
               </label>
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                <div className="text-xs text-[#78716C] flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-[#4338CA]" />
+                <div className="text-xs text-[#536b82] flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-[#0a2472]" />
                   <span>Ready to start {questions.length} questions</span>
                 </div>
 
@@ -549,12 +552,12 @@ export const InstructionScreen: React.FC<InstructionScreenProps> = ({
                   disabled={!isReadyToStart}
                   className={`w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 ${
                     isReadyToStart
-                      ? 'bg-[#4338CA] hover:bg-[#3730A3] text-white cursor-pointer shadow-indigo-500/25 hover:shadow-indigo-500/35'
-                      : 'bg-[#FAFAF9] text-[#78716C] border border-[#E7E5E4] cursor-not-allowed opacity-60'
+                      ? 'bg-[#0a2472] hover:bg-[#001c55] text-white cursor-pointer shadow-[#0a2472]/25 hover:shadow-[#0a2472]/35'
+                      : 'bg-[#f8fbfe] text-[#536b82] border border-[#d6e4f0] cursor-not-allowed opacity-60'
                   }`}
                 >
                   <Maximize2 className="w-4 h-4" />
-                  Start Proctored Assessment
+                  <span>Start Proctored Assessment</span>
                 </button>
               </div>
 

@@ -62,12 +62,12 @@ export const LiveProctorWidget: React.FC<LiveProctorWidgetProps> = ({
   return (
     <div 
       id="live-proctor-pip-widget"
-      className="fixed bottom-4 right-4 z-40 bg-white/95 backdrop-blur-md border border-[#E7E5E4] rounded-2xl shadow-xl overflow-hidden transition-all duration-200 select-none"
+      className="fixed bottom-4 right-4 z-40 bg-white/95 backdrop-blur-md border border-[#d6e4f0] rounded-2xl shadow-xl overflow-hidden transition-all duration-200 select-none"
       style={{ width: isMinimized ? '190px' : '230px' }}
     >
       {/* Widget Header */}
-      <div className="bg-[#FAFAF9] px-3.5 py-2.5 border-b border-[#E7E5E4] flex items-center justify-between text-xs">
-        <div className="flex items-center gap-1.5 font-bold text-[#1C1917]">
+      <div className="bg-[#f8fbfe] px-3.5 py-2.5 border-b border-[#d6e4f0] flex items-center justify-between text-xs">
+        <div className="flex items-center gap-1.5 font-bold text-[#00072d]">
           <span className="w-2 h-2 rounded-full bg-[#E11D48] animate-rec-pulse"></span>
           <span>Proctor Cam</span>
         </div>
@@ -75,7 +75,7 @@ export const LiveProctorWidget: React.FC<LiveProctorWidgetProps> = ({
         <div className="flex items-center gap-1">
           <button
             onClick={() => setIsMinimized(!isMinimized)}
-            className="text-[#78716C] hover:text-[#1C1917] p-1 rounded-lg hover:bg-[#E7E5E4] transition-colors cursor-pointer"
+            className="text-[#536b82] hover:text-[#00072d] p-1 rounded-lg hover:bg-[#edf5fa] transition-colors cursor-pointer"
             title={isMinimized ? 'Expand Camera View' : 'Minimize Camera View'}
           >
             {isMinimized ? <Maximize2 className="w-3.5 h-3.5" /> : <Minimize2 className="w-3.5 h-3.5" />}
@@ -95,23 +95,23 @@ export const LiveProctorWidget: React.FC<LiveProctorWidgetProps> = ({
               className="w-full h-full object-cover transform -scale-x-100"
             />
           ) : (
-            <div className="text-xs text-[#78716C] p-2 text-center">
+            <div className="text-xs text-[#536b82] p-2 text-center">
               A/V stream initializing...
             </div>
           )}
 
           {/* Overlay Status Indicator */}
-          <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-mono text-[#0891B2] border border-white/10">
+          <div className="absolute top-2 left-2 flex items-center gap-1 bg-black/70 backdrop-blur px-2 py-0.5 rounded-md text-[10px] font-mono text-[#a6e1fa] border border-white/10">
             <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] animate-pulse"></span>
             <span>AUDIT LIVE</span>
           </div>
 
           {/* Audio Visualizer Pill */}
           <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-2 border border-white/10">
-            <Mic className="w-3 h-3 text-[#4338CA] shrink-0" />
+            <Mic className="w-3 h-3 text-[#a6e1fa] shrink-0" />
             <div className="w-full bg-black/60 h-1.5 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-gradient-to-r from-[#16A34A] via-[#0891B2] to-[#4338CA] transition-all duration-75"
+                className="h-full bg-gradient-to-r from-[#16a34a] via-[#0e6ba8] to-[#0a2472] transition-all duration-75"
                 style={{ width: `${audioLevel}%` }}
               />
             </div>
@@ -120,14 +120,14 @@ export const LiveProctorWidget: React.FC<LiveProctorWidgetProps> = ({
       )}
 
       {/* Footer Info Strip */}
-      <div className="p-2.5 bg-[#FAFAF9] flex items-center justify-between text-[11px] border-t border-[#E7E5E4]">
-        <span className="flex items-center gap-1 text-[#78716C]">
-          <Video className="w-3 h-3 text-[#0891B2]" /> Sensor On
+      <div className="p-2.5 bg-[#f8fbfe] flex items-center justify-between text-[11px] border-t border-[#d6e4f0]">
+        <span className="flex items-center gap-1 text-[#536b82]">
+          <Video className="w-3 h-3 text-[#0e6ba8]" /> Sensor On
         </span>
 
         <span 
           className={`font-semibold flex items-center gap-1 ${
-            strikeCount > 0 ? 'text-[#E11D48]' : 'text-[#16A34A]'
+            strikeCount > 0 ? 'text-[#E11D48]' : 'text-[#16a34a]'
           }`}
         >
           <ShieldAlert className="w-3 h-3" />

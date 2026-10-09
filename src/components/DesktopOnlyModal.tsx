@@ -59,17 +59,17 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
       aria-modal="true"
       aria-labelledby="desktop-warning-title"
     >
-      <div className="bg-white border border-[#E7E5E4] rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div className="bg-white border border-[#d6e4f0] rounded-2xl max-w-lg w-full shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
         
         {/* Modal Top Header Bar */}
-        <div className="bg-gradient-to-r from-[#4338CA] via-[#3730A3] to-[#1E1B4B] p-5 text-white flex items-start justify-between relative">
+        <div className="bg-gradient-to-r from-[#00072d] via-[#001c55] to-[#0a2472] p-5 text-white flex items-start justify-between relative">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-white/15 backdrop-blur-xs border border-white/20 flex items-center justify-center text-white shrink-0">
-              <Monitor className="w-6 h-6 text-white" />
+              <Monitor className="w-6 h-6 text-[#a6e1fa]" />
             </div>
             <div>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-bold uppercase tracking-wider mb-1">
-                <AlertTriangle className="w-3 h-3 text-[#FBBF24]" />
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-white/20 text-[#a6e1fa] text-[11px] font-bold uppercase tracking-wider mb-1">
+                <AlertTriangle className="w-3 h-3 text-[#f59e0b]" />
                 Desktop Required
               </span>
               <h3 id="desktop-warning-title" className="text-lg sm:text-xl font-extrabold leading-tight">
@@ -89,27 +89,27 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
         </div>
 
         {/* Modal Scrollable Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 text-[#1C1917]">
+        <div className="p-5 sm:p-6 overflow-y-auto space-y-5 text-[#00072d]">
           
           {/* Target Test Details Card if available */}
           {selectedTest && (
-            <div className="bg-[#EEF2FF] border border-[#C7D2FE] rounded-xl p-3.5 flex items-center justify-between gap-3">
+            <div className="bg-[#f8fbfe] border border-[#d6e4f0] rounded-xl p-3.5 flex items-center justify-between gap-3">
               <div className="space-y-0.5 min-w-0">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#4338CA]">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0e6ba8]">
                   Selected Paper
                 </span>
-                <p className="text-sm font-bold text-[#1C1917] truncate">
+                <p className="text-sm font-bold text-[#00072d] truncate">
                   {selectedTest.title}
                 </p>
-                <p className="text-xs text-[#4338CA]">
+                <p className="text-xs text-[#0a2472]">
                   {selectedTest.standard} • {selectedTest.subject} (Set {selectedTest.setNumber})
                 </p>
               </div>
               <div className="text-right shrink-0">
-                <span className="block text-xs font-extrabold text-[#1C1917]">
+                <span className="block text-xs font-extrabold text-[#00072d]">
                   {selectedTest.durationMinutes} Min
                 </span>
-                <span className="text-[11px] text-[#78716C]">
+                <span className="text-[11px] text-[#536b82]">
                   {selectedTest.questions.length} Items
                 </span>
               </div>
@@ -117,13 +117,13 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
           )}
 
           {/* Primary Alert Callout */}
-          <div className="bg-[#FFF7ED] border border-[#FED7AA] rounded-xl p-4 flex items-start gap-3 text-xs sm:text-sm text-[#9A3412]">
-            <Smartphone className="w-5 h-5 text-[#EA580C] shrink-0 mt-0.5" />
+          <div className="bg-[#fff7ed] border border-[#fed7aa] rounded-xl p-4 flex items-start gap-3 text-xs sm:text-sm text-[#9a3412]">
+            <Smartphone className="w-5 h-5 text-[#ea580c] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <p className="font-bold text-[#C2410C]">
+              <p className="font-bold text-[#c2410c]">
                 Mobile Examination Not Permitted
               </p>
-              <p className="text-[#9A3412] leading-relaxed text-xs">
+              <p className="text-[#9a3412] leading-relaxed text-xs">
                 You can browse the website, view test catalogs, and check syllabi from any smartphone or tablet. However, the <strong>live assessment window strictly requires a desktop or laptop computer</strong>.
               </p>
             </div>
@@ -131,43 +131,43 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
 
           {/* Requirements Breakdown */}
           <div className="space-y-2.5">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#78716C]">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#536b82]">
               Why the Test Window Requires a Desktop/Laptop:
             </h4>
 
             <div className="grid grid-cols-1 gap-2.5 text-xs">
               
-              <div className="p-3 rounded-xl bg-[#FAFAF9] border border-[#E7E5E4] flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#EEF2FF] text-[#4338CA] flex items-center justify-center shrink-0">
+              <div className="p-3 rounded-xl bg-[#f8fbfe] border border-[#d6e4f0] flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#a6e1fa]/30 text-[#0a2472] flex items-center justify-center shrink-0">
                   <Monitor className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="font-bold text-[#1C1917]">Full-Screen Anti-Cheat Lockdown</p>
-                  <p className="text-[#78716C] mt-0.5 leading-relaxed">
+                  <p className="font-bold text-[#00072d]">Full-Screen Anti-Cheat Lockdown</p>
+                  <p className="text-[#536b82] mt-0.5 leading-relaxed">
                     Tracks window focus, prevents background app switching, and enforces single-window examination rules.
                   </p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#FAFAF9] border border-[#E7E5E4] flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#ECFDF5] text-[#16A34A] flex items-center justify-center shrink-0">
+              <div className="p-3 rounded-xl bg-[#f8fbfe] border border-[#d6e4f0] flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#ecfdf5] text-[#16a34a] flex items-center justify-center shrink-0">
                   <Camera className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="font-bold text-[#1C1917]">Live Webcam &amp; Microphone Proctoring</p>
-                  <p className="text-[#78716C] mt-0.5 leading-relaxed">
+                  <p className="font-bold text-[#00072d]">Live Webcam &amp; Microphone Proctoring</p>
+                  <p className="text-[#536b82] mt-0.5 leading-relaxed">
                     Surveillance recording and noise anomaly detection require stable desktop browser media streaming.
                   </p>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#FAFAF9] border border-[#E7E5E4] flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#FFF7ED] text-[#F97316] flex items-center justify-center shrink-0">
+              <div className="p-3 rounded-xl bg-[#f8fbfe] border border-[#d6e4f0] flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-[#fff7ed] text-[#f97316] flex items-center justify-center shrink-0">
                   <Keyboard className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="font-bold text-[#1C1917]">Physical Keyboard &amp; Large Display</p>
-                  <p className="text-[#78716C] mt-0.5 leading-relaxed">
+                  <p className="font-bold text-[#00072d]">Physical Keyboard &amp; Large Display</p>
+                  <p className="text-[#536b82] mt-0.5 leading-relaxed">
                     Scientific formulas, circuit diagrams, and numerical inputs are built for desktop resolution.
                   </p>
                 </div>
@@ -177,8 +177,8 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
           </div>
 
           {/* Share/Copy link to open on desktop */}
-          <div className="bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl p-3.5 space-y-2">
-            <p className="text-xs font-semibold text-[#1C1917]">
+          <div className="bg-[#f8fbfe] border border-[#d6e4f0] rounded-xl p-3.5 space-y-2">
+            <p className="text-xs font-semibold text-[#00072d]">
               Copy link to open on your PC or Laptop:
             </p>
             <div className="flex items-center gap-2">
@@ -186,15 +186,15 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
                 type="text"
                 readOnly
                 value={typeof window !== 'undefined' ? window.location.href : ''}
-                className="w-full text-xs font-mono text-[#78716C] bg-white border border-[#E7E5E4] rounded-lg px-3 py-2 focus:outline-none select-all"
+                className="w-full text-xs font-mono text-[#536b82] bg-white border border-[#d6e4f0] rounded-lg px-3 py-2 focus:outline-none select-all"
               />
               <button
                 id="copy-exam-link-btn"
                 onClick={handleCopyLink}
                 className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer ${
                   copied
-                    ? 'bg-[#16A34A] text-white'
-                    : 'bg-[#4338CA] hover:bg-[#3730A3] text-white'
+                    ? 'bg-[#16a34a] text-white'
+                    : 'bg-[#0a2472] hover:bg-[#001c55] text-white'
                 }`}
               >
                 {copied ? (
@@ -211,7 +211,7 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
               </button>
             </div>
             {copied && (
-              <p className="text-[11px] text-[#16A34A] font-semibold">
+              <p className="text-[11px] text-[#16a34a] font-semibold">
                 ✓ Link copied to clipboard. Send it via WhatsApp or Email to open on your desktop.
               </p>
             )}
@@ -220,7 +220,7 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
         </div>
 
         {/* Modal Footer Buttons */}
-        <div className="bg-[#FAFAF9] border-t border-[#E7E5E4] p-4 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+        <div className="bg-[#f8fbfe] border-t border-[#d6e4f0] p-4 flex flex-col sm:flex-row items-center justify-between gap-2.5">
           {onPreviewInstructions ? (
             <button
               id="preview-instructions-btn"
@@ -228,13 +228,13 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
                 onClose();
                 onPreviewInstructions();
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-[#4338CA] hover:bg-[#EEF2FF] border border-[#C7D2FE] transition-colors cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-[#0a2472] hover:bg-[#a6e1fa]/20 border border-[#d6e4f0] transition-colors cursor-pointer"
             >
               <Eye className="w-3.5 h-3.5" />
               <span>Preview Guidelines on Mobile</span>
             </button>
           ) : (
-            <div className="text-[11px] text-[#78716C]">
+            <div className="text-[11px] text-[#536b82]">
               Switch to a laptop or PC to take the exam.
             </div>
           )}
@@ -242,7 +242,7 @@ export const DesktopOnlyModal: React.FC<DesktopOnlyModalProps> = ({
           <button
             id="modal-browse-mobile-btn"
             onClick={onClose}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-[#1C1917] bg-white border border-[#E7E5E4] hover:bg-[#F5F5F4] transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-[#00072d] bg-white border border-[#d6e4f0] hover:bg-[#edf5fa] transition-colors cursor-pointer"
           >
             Got It, Continue Browsing
           </button>

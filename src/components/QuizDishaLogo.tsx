@@ -59,7 +59,7 @@ export const QuizDishaLogo: React.FC<QuizDishaLogoProps> = ({
       <div className="flex flex-col justify-center leading-tight">
         <span
           className={`font-serif font-black tracking-wide text-xl sm:text-2xl leading-none transition-colors ${
-            inverted ? 'text-white' : 'text-[#1C1917]'
+            inverted ? 'text-white' : 'text-[#00072d]'
           }`}
         >
           QUIZDISHA

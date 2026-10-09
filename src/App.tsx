@@ -15,6 +15,8 @@ import { InstructionScreen } from './components/InstructionScreen';
 import { FloatingHeader } from './components/FloatingHeader';
 import { QuestionCard } from './components/QuestionCard';
 import { QuestionPalette } from './components/QuestionPalette';
+import { TestSectionBar } from './components/TestSectionBar';
+import { CombinedSubjectSelectionHub } from './components/CombinedSubjectSelectionHub';
 import { LiveProctorWidget } from './components/LiveProctorWidget';
 import { WarningModal } from './components/WarningModal';
 import { ConfirmSubmitModal } from './components/ConfirmSubmitModal';
@@ -24,6 +26,7 @@ import { DesktopOnlyModal } from './components/DesktopOnlyModal';
 export default function App() {
   const [phase, setPhase] = useState<'landing' | 'instructions' | 'active' | 'report'>('landing');
   const [selectedTest, setSelectedTest] = useState<TestMetadata | null>(null);
+  const [activeCombinedSubject, setActiveCombinedSubject] = useState<'Physics' | 'Mathematics' | null>(null);
   const [isDesktopModalOpen, setIsDesktopModalOpen] = useState(false);
   const [candidate, setCandidate] = useState<CandidateInfo>({
     name: '',
@@ -39,7 +42,7 @@ export default function App() {
   const questions: Question[] = selectedTest ? selectedTest.questions : SAMPLE_QUESTIONS;
   const totalAllocatedSeconds = selectedTest 
     ? selectedTest.durationMinutes * 60 
-    : questions.length * 120; // 2 minutes each
+    : questions.length * 180; // 3 minutes each
   const [remainingSeconds, setRemainingSeconds] = useState<number>(totalAllocatedSeconds);
 
   // Submitting state and guard refs to strictly prevent double submission and double PDF upload
@@ -61,6 +64,7 @@ export default function App() {
   // Handler when user selects a test paper from the Landing Page
   const handleSelectTest = (test: TestMetadata) => {
     setSelectedTest(test);
+    setActiveCombinedSubject(null);
     const initialAnswers: Record<string, UserAnswerValue> = {};
     test.questions.forEach((q) => {
       initialAnswers[q.id] = null;
@@ -131,6 +135,7 @@ export default function App() {
     setAnswers(initialAnswers);
     setMarkedForReview({});
     setCurrentIndex(0);
+    setActiveCombinedSubject(null);
     setRemainingSeconds(totalAllocatedSeconds);
     setPhase('active');
   };
@@ -294,20 +299,75 @@ export default function App() {
     }));
   };
 
+  // Navigation & Subject Handling for Combined Exams
+  const isCombined = selectedTest?.subject === 'Combined';
+
+  const handleSelectCombinedSubject = (subject: 'Physics' | 'Mathematics') => {
+    setActiveCombinedSubject(subject);
+    const firstIdx = questions.findIndex((q) => q.subject === subject);
+    if (firstIdx !== -1) {
+      setCurrentIndex(firstIdx);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleReturnToSubjectHub = () => {
+    setActiveCombinedSubject(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const subjectIndices = isCombined && activeCombinedSubject
+    ? questions
+        .map((q, i) => (q.subject === activeCombinedSubject ? i : -1))
+        .filter((i) => i !== -1)
+    : [];
+
+  const isFirstOfSubjectSection = isCombined && activeCombinedSubject
+    ? subjectIndices.length > 0 && subjectIndices[0] === currentIndex
+    : currentIndex === 0;
+
+  const isLastOfSubjectSection = isCombined && activeCombinedSubject
+    ? subjectIndices.length > 0 && subjectIndices[subjectIndices.length - 1] === currentIndex
+    : false;
+
   const handlePrev = () => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
+    if (isCombined && activeCombinedSubject && subjectIndices.length > 0) {
+      const curSubPos = subjectIndices.indexOf(currentIndex);
+      if (curSubPos > 0) {
+        setCurrentIndex(subjectIndices[curSubPos - 1]);
+      }
+    } else {
+      setCurrentIndex((prev) => Math.max(0, prev - 1));
+    }
   };
 
   const handleNext = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
+    if (isCombined && activeCombinedSubject) {
+      if (isLastOfSubjectSection) {
+        handleReturnToSubjectHub();
+      } else {
+        const curSubPos = subjectIndices.indexOf(currentIndex);
+        if (curSubPos !== -1 && curSubPos < subjectIndices.length - 1) {
+          setCurrentIndex(subjectIndices[curSubPos + 1]);
+        } else {
+          handleReturnToSubjectHub();
+        }
+      }
     } else {
-      // Last question reached: open confirm submit modal
-      setIsConfirmSubmitOpen(true);
+      if (currentIndex < questions.length - 1) {
+        setCurrentIndex((prev) => prev + 1);
+      } else {
+        // Last question reached: open confirm submit modal
+        setIsConfirmSubmitOpen(true);
+      }
     }
   };
 
   const handleSelectQuestion = (index: number) => {
+    const targetQ = questions[index];
+    if (isCombined && targetQ?.subject) {
+      setActiveCombinedSubject(targetQ.subject);
+    }
     setCurrentIndex(index);
   };
 
@@ -319,7 +379,7 @@ export default function App() {
   const currentQuestion = questions[currentIndex];
 
   return (
-    <div className="min-h-screen bg-[#FAFAF9] text-[#1C1917] flex flex-col font-sans selection:bg-[#4338CA] selection:text-white">
+    <div className="min-h-screen bg-[#f8fbfe] text-[#00072d] flex flex-col font-sans selection:bg-[#0a2472] selection:text-white">
       
       {/* 0. Landing Page: Full Examination Directory & Give Exam Portal */}
       {phase === 'landing' && (
@@ -343,19 +403,19 @@ export default function App() {
 
       {/* 2. Active Proctored Quiz Screen (Desktop Only Guard) */}
       {phase === 'active' && isMobileOrTabletDevice() && (
-        <div className="min-h-screen bg-[#FAFAF9] flex items-center justify-center p-6 text-center">
-          <div className="bg-white border border-[#E7E5E4] rounded-2xl p-8 max-w-md w-full shadow-lg space-y-4">
-            <div className="w-12 h-12 rounded-xl bg-[#FFF7ED] text-[#EA580C] border border-[#FED7AA] flex items-center justify-center mx-auto">
+        <div className="min-h-screen bg-[#f8fbfe] flex items-center justify-center p-6 text-center">
+          <div className="bg-white border border-[#d6e4f0] rounded-2xl p-8 max-w-md w-full shadow-lg space-y-4">
+            <div className="w-12 h-12 rounded-xl bg-[#fff7ed] text-[#ea580c] border border-[#fed7aa] flex items-center justify-center mx-auto">
               <Monitor className="w-6 h-6" />
             </div>
-            <h2 className="text-xl font-extrabold text-[#1C1917]">Desktop Required for Test Window</h2>
-            <p className="text-xs text-[#78716C] leading-relaxed">
+            <h2 className="text-xl font-extrabold text-[#00072d]">Desktop Required for Test Window</h2>
+            <p className="text-xs text-[#536b82] leading-relaxed">
               The live assessment window cannot run on a mobile or tablet device. Please open this assessment on a desktop computer or laptop to proceed.
             </p>
             <div className="pt-2">
               <button
                 onClick={() => setPhase('landing')}
-                className="w-full py-2.5 px-4 rounded-xl bg-[#4338CA] hover:bg-[#3730A3] text-white text-xs font-bold transition-colors cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#0a2472] hover:bg-[#001c55] text-white text-xs font-bold transition-colors cursor-pointer"
               >
                 Return to Test Directory
               </button>
@@ -364,7 +424,7 @@ export default function App() {
         </div>
       )}
 
-      {phase === 'active' && !isMobileOrTabletDevice() && currentQuestion && (
+      {phase === 'active' && !isMobileOrTabletDevice() && (
         <div className="flex-1 flex flex-col">
           
           {/* Floating Sticky Countdown Header */}
@@ -379,37 +439,63 @@ export default function App() {
             onSubmitClick={() => setIsConfirmSubmitOpen(true)}
           />
 
-          {/* Main Assessment Layout: Two-Column Responsive Workspace */}
-          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            
-            {/* Left Column: Interactive Question Card (8 cols) */}
-            <div className="lg:col-span-8 w-full">
-              <QuestionCard
-                question={currentQuestion}
-                currentIndex={currentIndex}
-                totalQuestions={questions.length}
-                currentAnswer={answers[currentQuestion.id] ?? null}
-                isMarkedForReview={!!markedForReview[currentQuestion.id]}
-                onAnswerChange={handleAnswerChange}
-                onToggleReview={handleToggleReview}
-                onClearResponse={handleClearResponse}
-                onPrev={handlePrev}
-                onNext={handleNext}
-              />
-            </div>
-
-            {/* Right Column: Question Navigation Grid Palette (4 cols) */}
-            <div className="lg:col-span-4 w-full">
-              <QuestionPalette
+          {/* Conditional: Combined Assessment Subject Selection Hub */}
+          {isCombined && activeCombinedSubject === null ? (
+            <main className="flex-1 max-w-7xl w-full mx-auto">
+              <CombinedSubjectSelectionHub
+                testMetadata={selectedTest}
                 questions={questions}
-                currentIndex={currentIndex}
                 answers={answers}
                 markedForReview={markedForReview}
-                onSelectQuestion={handleSelectQuestion}
+                onSelectSubject={handleSelectCombinedSubject}
+                onSubmitExam={() => setIsConfirmSubmitOpen(true)}
               />
-            </div>
+            </main>
+          ) : currentQuestion ? (
+            /* Main Assessment Layout: Two-Column Responsive Workspace */
+            <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              
+              {/* Left Column: Interactive Question Card (8 cols) */}
+              <div className="lg:col-span-8 w-full space-y-4">
+                <TestSectionBar
+                  questions={questions}
+                  currentIndex={currentIndex}
+                  onSelectQuestion={handleSelectQuestion}
+                  isCombined={isCombined}
+                  onReturnToSubjectSelection={isCombined ? handleReturnToSubjectHub : undefined}
+                />
+                <QuestionCard
+                  question={currentQuestion}
+                  currentIndex={currentIndex}
+                  totalQuestions={questions.length}
+                  currentAnswer={answers[currentQuestion.id] ?? null}
+                  isMarkedForReview={!!markedForReview[currentQuestion.id]}
+                  onAnswerChange={handleAnswerChange}
+                  onToggleReview={handleToggleReview}
+                  onClearResponse={handleClearResponse}
+                  onPrev={handlePrev}
+                  onNext={handleNext}
+                  isFirst={isFirstOfSubjectSection}
+                  isLastOfSubjectSection={isLastOfSubjectSection}
+                  onCompleteSubjectSection={handleReturnToSubjectHub}
+                />
+              </div>
 
-          </main>
+              {/* Right Column: Question Navigation Grid Palette (4 cols) */}
+              <div className="lg:col-span-4 w-full">
+                <QuestionPalette
+                  questions={questions}
+                  currentIndex={currentIndex}
+                  answers={answers}
+                  markedForReview={markedForReview}
+                  onSelectQuestion={handleSelectQuestion}
+                  isCombined={isCombined}
+                  onReturnToSubjectSelection={isCombined ? handleReturnToSubjectHub : undefined}
+                />
+              </div>
+
+            </main>
+          ) : null}
 
           {/* Floating Picture-in-Picture Webcam Widget */}
           <LiveProctorWidget

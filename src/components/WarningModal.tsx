@@ -39,7 +39,7 @@ export const WarningModal: React.FC<WarningModalProps> = ({
             </span>
           </div>
 
-          <h3 className="text-xl sm:text-2xl font-extrabold text-[#1C1917]">
+          <h3 className="text-xl sm:text-2xl font-extrabold text-[#00072d]">
             {isFinalStrike
               ? 'Assessment Terminated: 3 Strikes Reached'
               : 'Proctoring Security Alert'}
@@ -47,12 +47,12 @@ export const WarningModal: React.FC<WarningModalProps> = ({
         </div>
 
         {/* Violation Description */}
-        <div className="bg-[#FAFAF9] border border-[#E7E5E4] rounded-xl p-4 text-left space-y-2">
-          <div className="flex items-center justify-between text-xs text-[#78716C] border-b border-[#E7E5E4] pb-2">
+        <div className="bg-[#f8fbfe] border border-[#d6e4f0] rounded-xl p-4 text-left space-y-2">
+          <div className="flex items-center justify-between text-xs text-[#536b82] border-b border-[#d6e4f0] pb-2">
             <span>Detected Violation:</span>
-            <span className="font-mono text-[#0891B2] font-semibold">{warning.timestamp}</span>
+            <span className="font-mono text-[#0e6ba8] font-semibold">{warning.timestamp}</span>
           </div>
-          <p className="text-sm text-[#1C1917] font-medium leading-relaxed">
+          <p className="text-sm text-[#00072d] font-medium leading-relaxed">
             {warning.description}
           </p>
         </div>

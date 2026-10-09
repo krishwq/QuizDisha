@@ -288,16 +288,16 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
             {/* Candidate Identity Profile & Test Metadata */}
             <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-[#1C1917]">
               {report.testInfo && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#EEF2FF] border border-[#4338CA]/20 font-bold text-[#4338CA]">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#a6e1fa]/30 border border-[#a6e1fa]/40 font-bold text-[#0a2472]">
                   {report.testInfo.title}
                 </span>
               )}
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAFAF9] border border-[#E7E5E4] font-semibold text-[#1C1917]">
-                <User className="w-3.5 h-3.5 text-[#4338CA]" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f8fbfe] border border-[#d6e4f0] font-semibold text-[#00072d]">
+                <User className="w-3.5 h-3.5 text-[#0a2472]" />
                 {report.candidate?.name || 'Candidate'}
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#FAFAF9] border border-[#E7E5E4] text-[#78716C]">
-                <Mail className="w-3.5 h-3.5 text-[#0891B2]" />
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#f8fbfe] border border-[#d6e4f0] text-[#536b82]">
+                <Mail className="w-3.5 h-3.5 text-[#0e6ba8]" />
                 {report.candidate?.email || 'N/A'}
               </span>
             </div>
@@ -310,7 +310,7 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
                 id="header-download-pdf-btn"
                 href={report.pdfBlobUrl}
                 download={report.pdfFileName || 'Candidate_Report.pdf'}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#4338CA] hover:bg-[#3730A3] text-white shadow-sm transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#0a2472] hover:bg-[#001c55] text-white shadow-sm transition-all cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>Download PDF Report</span>
@@ -323,39 +323,39 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
         <section className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">
           
           {/* 1. Net Score */}
-          <div className="bg-white border-2 border-[#4338CA]/40 rounded-2xl p-4 shadow-sm flex flex-col justify-between col-span-2 sm:col-span-2 lg:col-span-1">
-            <span className="text-xs font-bold text-[#4338CA] uppercase tracking-wider">
+          <div className="bg-white border-2 border-[#0a2472]/40 rounded-2xl p-4 shadow-sm flex flex-col justify-between col-span-2 sm:col-span-2 lg:col-span-1">
+            <span className="text-xs font-bold text-[#0a2472] uppercase tracking-wider">
               Net Score
             </span>
             <div className="my-2">
-              <span className="text-3xl font-extrabold text-[#1C1917]">
+              <span className="text-3xl font-extrabold text-[#00072d]">
                 {report.netScore}
               </span>
-              <span className="text-xs text-[#78716C] ml-1">
+              <span className="text-xs text-[#536b82] ml-1">
                 / {report.maxPossibleScore}
               </span>
             </div>
-            <span className="text-[11px] text-[#0891B2] font-semibold">
+            <span className="text-[11px] text-[#0e6ba8] font-semibold">
               {percentageScore}% Achievement
             </span>
           </div>
 
           {/* 2. Total Questions */}
-          <div className="bg-white border border-[#E7E5E4] rounded-2xl p-4 shadow-sm flex flex-col justify-between">
-            <span className="text-xs font-medium text-[#78716C]">Total Questions</span>
-            <div className="my-1.5 text-2xl font-bold text-[#1C1917]">
+          <div className="bg-white border border-[#d6e4f0] rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+            <span className="text-xs font-medium text-[#536b82]">Total Questions</span>
+            <div className="my-1.5 text-2xl font-bold text-[#00072d]">
               {report.totalQuestions}
             </div>
-            <span className="text-[11px] text-[#78716C]">100% Monitored</span>
+            <span className="text-[11px] text-[#536b82]">100% Monitored</span>
           </div>
 
           {/* 3. Total Attempted */}
-          <div className="bg-white border border-[#E7E5E4] rounded-2xl p-4 shadow-sm flex flex-col justify-between">
-            <span className="text-xs font-medium text-[#78716C]">Attempted</span>
-            <div className="my-1.5 text-2xl font-bold text-[#1C1917]">
+          <div className="bg-white border border-[#d6e4f0] rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+            <span className="text-xs font-medium text-[#536b82]">Attempted</span>
+            <div className="my-1.5 text-2xl font-bold text-[#00072d]">
               {report.attemptedCount}
             </div>
-            <span className="text-[11px] text-[#78716C]">
+            <span className="text-[11px] text-[#536b82]">
               {report.unattemptedCount} Skipped
             </span>
           </div>
@@ -386,7 +386,7 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
             <div className="my-1.5 text-2xl font-bold text-[#16A34A]">
               +{report.positiveMarks}
             </div>
-            <span className="text-[11px] text-[#78716C]">Scored Correctly</span>
+            <span className="text-[11px] text-[#536b82]">Scored Correctly</span>
           </div>
 
           {/* 7. Total Negative Marks */}
@@ -395,20 +395,20 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
             <div className="my-1.5 text-2xl font-bold text-[#E11D48]">
               -{report.negativeMarks}
             </div>
-            <span className="text-[11px] text-[#78716C]">Penalty Deductions</span>
+            <span className="text-[11px] text-[#536b82]">Penalty Deductions</span>
           </div>
 
         </section>
 
         {/* Navigation Tabs between Overview Analytics, Question Review, and Proctor Audit */}
-        <div className="flex items-center gap-2 border-b border-[#E7E5E4] pb-1">
+        <div className="flex items-center gap-2 border-b border-[#d6e4f0] pb-1">
           <button
             id="tab-analytics-btn"
             onClick={() => setActiveTab('analytics')}
             className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'analytics'
-                ? 'bg-[#4338CA] text-white shadow-sm'
-                : 'text-[#78716C] hover:text-[#1C1917] hover:bg-[#EEF2FF]/60'
+                ? 'bg-[#0a2472] text-white shadow-sm'
+                : 'text-[#536b82] hover:text-[#00072d] hover:bg-[#a6e1fa]/20'
             }`}
           >
             <Trophy className="w-4 h-4" />
@@ -420,8 +420,8 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
             onClick={() => setActiveTab('review')}
             className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'review'
-                ? 'bg-[#0891B2] text-white shadow-sm'
-                : 'text-[#78716C] hover:text-[#1C1917] hover:bg-[#ECFEFF]/60'
+                ? 'bg-[#0e6ba8] text-white shadow-sm'
+                : 'text-[#536b82] hover:text-[#00072d] hover:bg-[#a6e1fa]/20'
             }`}
           >
             <Eye className="w-4 h-4" />
@@ -434,7 +434,7 @@ export const ReportScreen: React.FC<ReportScreenProps> = ({
             className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
               activeTab === 'proctor'
                 ? 'bg-[#E11D48] text-white shadow-sm'
-                : 'text-[#78716C] hover:text-[#1C1917] hover:bg-[#E11D48]/10'
+                : 'text-[#536b82] hover:text-[#00072d] hover:bg-[#E11D48]/10'
             }`}
           >
             <ShieldAlert className="w-4 h-4" />

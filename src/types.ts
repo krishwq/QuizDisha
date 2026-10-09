@@ -17,6 +17,8 @@ export interface BaseQuestion {
   explanation: string;
   imageUrl?: string; // External link for question diagram / illustration
   imageCaption?: string; // Optional caption for the question image
+  subject?: 'Physics' | 'Mathematics'; // Specific subject for combined papers
+  sectionLabel?: string; // Optional explicit section label
 }
 
 export interface SingleChoiceQuestion extends BaseQuestion {
@@ -78,13 +80,13 @@ export interface CandidateInfo {
 }
 
 export type ExamStandard = 'Class 10' | 'Class 9';
-export type ExamSubject = 'Physics' | 'Chemistry' | 'Mathematics' | 'All in One';
+export type ExamSubject = 'Physics' | 'Mathematics' | 'Combined';
 
 export interface TestMetadata {
   id: string;
   standard: ExamStandard;
   subject: ExamSubject;
-  setNumber: 1 | 2;
+  setNumber?: number;
   title: string;
   subtitle: string;
   description: string;
@@ -98,7 +100,7 @@ export interface TestInfo {
   id: string;
   standard: ExamStandard;
   subject: ExamSubject;
-  setNumber: 1 | 2;
+  setNumber?: number;
   title: string;
 }
 

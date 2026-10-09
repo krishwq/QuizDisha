@@ -32,7 +32,7 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
   return (
     <header 
       id="floating-proctor-header"
-      className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E7E5E4] shadow-sm transition-all"
+      className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#d6e4f0] shadow-sm transition-all"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2.5">
         
@@ -45,7 +45,7 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
 
             {/* Test Title Badge */}
             {testTitle && (
-              <div className="hidden md:flex items-center px-2.5 py-1 rounded-lg bg-[#FAFAF9] border border-[#E7E5E4] text-xs font-bold text-[#1C1917]">
+              <div className="hidden md:flex items-center px-2.5 py-1 rounded-lg bg-[#f8fbfe] border border-[#d6e4f0] text-xs font-bold text-[#00072d]">
                 {testTitle}
               </div>
             )}
@@ -67,7 +67,7 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold border ${
                 strikeCount > 0
                   ? 'bg-[#FFF1F2] text-[#E11D48] border-[#FECDD3] animate-pulse'
-                  : 'bg-[#FAFAF9] text-[#78716C] border-[#E7E5E4]'
+                  : 'bg-[#f8fbfe] text-[#536b82] border-[#d6e4f0]'
               }`}
             >
               <ShieldAlert className="w-3.5 h-3.5" />
@@ -84,12 +84,12 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
                   ? 'bg-[#FFF1F2] text-[#E11D48] border-[#E11D48] shadow-sm animate-pulse'
                   : isWarning
                   ? 'bg-[#FFF7ED] text-[#F97316] border-[#FED7AA] shadow-sm'
-                  : 'bg-[#FAFAF9] text-[#1C1917] border-[#E7E5E4] shadow-xs'
+                  : 'bg-[#f8fbfe] text-[#00072d] border-[#d6e4f0] shadow-xs'
               }`}
             >
-              <Clock className={`w-5 h-5 ${isUrgent ? 'animate-bounce text-[#E11D48]' : 'text-[#4338CA]'}`} />
+              <Clock className={`w-5 h-5 ${isUrgent ? 'animate-bounce text-[#E11D48]' : 'text-[#0a2472]'}`} />
               <span>{formatTime(remainingSeconds)}</span>
-              <span className="text-[10px] text-[#78716C] font-sans font-medium uppercase tracking-wider">
+              <span className="text-[10px] text-[#536b82] font-sans font-medium uppercase tracking-wider">
                 Time Left
               </span>
             </div>
@@ -98,8 +98,8 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
           {/* Right: Answered Progress & Submit Button */}
           <div className="flex items-center gap-3">
             <div className="hidden md:flex flex-col items-end text-xs">
-              <span className="text-[#78716C]">
-                Answered: <strong className="text-[#1C1917]">{answeredCount} / {totalQuestions}</strong>
+              <span className="text-[#536b82]">
+                Answered: <strong className="text-[#00072d]">{answeredCount} / {totalQuestions}</strong>
               </span>
               <span className="text-[#16A34A] font-semibold">{completionPercentage}% Completed</span>
             </div>
@@ -121,10 +121,10 @@ export const FloatingHeader: React.FC<FloatingHeaderProps> = ({
         </div>
 
         {/* Global Progress Bar pinned under header */}
-        <div className="w-full bg-[#E7E5E4] h-1.5 rounded-full overflow-hidden mt-2 border border-[#E7E5E4]">
+        <div className="w-full bg-[#d6e4f0] h-1.5 rounded-full overflow-hidden mt-2 border border-[#d6e4f0]">
           <div 
             id="quiz-completion-progress-bar"
-            className="h-full bg-gradient-to-r from-[#4338CA] via-[#0891B2] to-[#16A34A] transition-all duration-300"
+            className="h-full bg-gradient-to-r from-[#0a2472] via-[#0e6ba8] to-[#16A34A] transition-all duration-300"
             style={{ width: `${completionPercentage}%` }}
           />
         </div>

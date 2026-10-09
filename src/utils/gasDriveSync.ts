@@ -68,7 +68,10 @@ export function getSavedGasUrl(): string {
     // localStorage might be unavailable in restricted iframes
   }
 
-  const envUrl = (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string | undefined) || '';
+  const envUrl =
+    (import.meta.env.VITE_GOOGLE_APPS_SCRIPT_URL as string | undefined) ||
+    ((import.meta.env as Record<string, string | undefined>).GOOGLE_APPS_SCRIPT_URL as string | undefined) ||
+    '';
   if (envUrl && isValidGasEndpoint(envUrl)) {
     return envUrl.trim();
   }
